@@ -1,21 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Mar  5 19:30:15 2019
-
-@author: natha
-"""
-
-"""
-Created on Mon Mar  4 20:15:49 2019
-
-@author: natha
-"""
 import pandas as pd
 from yahoofinancials import YahooFinancials
 import numpy as np
 pd.set_option('display.float_format', lambda x: '%.0f' % x)
 import numpy as np
-import pandas as pd
 import plotly.offline as pyo
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
@@ -31,47 +18,24 @@ import dash_table
 from datetime import datetime as dt
 import dash_auth
 
-
+USERNAME_PASSWORD_PAIRS = [['username','password']]
 
 #yahoo_financials = YahooFinancials(ticker)
 
 app= dash.Dash()
+auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
 server = app.server
 
 
-stocks = ['A', 'AAL', 'AAP', 'AAPL', 'ABBV', 'ABC', 'ABMD', 'ABT', 'ACN', 'ADBE', 'ADI', 'ADM', 'ADP', 'ADS', 'ADSK', 'AEE', 'AEP', 'AES', 
-                'AFL', 'AGN', 'AIG', 'AIV', 'AIZ', 'AJG', 'AKAM', 
-                'ALB', 'ALGN', 'ALK', 'ALL', 'ALLE', 'ALXN', 'AMAT', 'AMD', 
-                'AME', 'AMG', 'AMGN', 'AMP', 'AMT', 'AMZN', 'ANET', 'ANSS', 'ANTM', 'AON', 'AOS', 'APA', 'APC', 'APD', 'APH', 'APTV',
-                'ARE', 'ARNC', 'ATVI', 'AVB', 'AVGO', 'AVY', 'AWK', 'AXP', 'AZO', 'BA', 'BAC', 'BAX', 'BBT', 'BBY', 'BDX', 'BEN',
-                'BF.B', 'BHF', 'BHGE', 'BIIB', 'BK', 'BKNG', 'BLK', 'BLL', 'BMY', 'BR', 'BRK.B', 'BSX', 'BWA', 'BXP', 'C', 'CAG', 'CAH',
-                'CAT', 'CB', 'CBOE', 'CBRE', 'CBS', 'CCI', 'CCL', 'CDNS', 'CE', 'CELG', 'CERN', 'CF', 'CFG', 'CHD', 'CHRW', 'CHTR',
-                'CI', 'CINF', 'CL', 'CLX', 'CMA', 'CMCSA', 'CME', 'CMG', 'CMI', 'CMS', 'CNC', 'CNP', 'COF', 'COG', 'COO', 'COP', 'COST', 'COTY',
-                'CPB', 'CPRI', 'CPRT', 'CRM', 'CSCO', 'CSX', 'CTAS', 'CTL', 'CTSH', 'CTXS', 'CVS', 'CVX', 'CXO', 'D', 'DAL', 'DE', 
-                'DFS', 'DG', 'DGX', 'DHI', 'DHR', 'DIS', 'DISCA', 'DISCK', 'DISH', 'DLR', 'DLTR', 'DOV', 'DRE', 'DRI', 'DTE', 'DUK', 'DVA', 
-                'DVN', 'DWDP', 'DXC', 'EA', 'EBAY', 'ECL', 'ED', 'EFX', 'EIX', 'EL', 'EMN', 'EMR', 'EOG', 'EQIX', 'EQR', 'ES', 
-                'ESS', 'ETFC', 'ETN', 'ETR', 'EVRG', 'EW', 'EXC', 'EXPD', 'EXPE', 'EXR', 'F', 'FANG', 'FAST', 'FB', 'FBHS', 'FCX', 'FDX', 'FE', 'FFIV',
-                'FIS', 'FISV', 'FITB', 'FL', 'FLIR', 'FLR', 'FLS', 'FLT', 'FMC', 'FOX', 'FOXA', 'FRC', 'FRT', 'FTI', 'FTNT', 'FTV', 
-                'GD', 'GE', 'GILD', 'GIS', 'GLW', 'GM', 'GOOG', 'GOOGL', 'GPC', 'GPN', 'GPS', 'GRMN', 'GS', 'GT', 'GWW', 'HAL', 'HAS',
-                'HBAN', 'HBI', 'HCA', 'HCP', 'HD', 'HES', 'HFC', 'HIG', 'HII', 'HLT', 'HOG', 'HOLX', 'HON', 'HP', 'HPE', 'HPQ', 'HRB', 'HRL', 
-                'HRS', 'HSIC', 'HST', 'HSY', 'HUM', 'IBM', 'ICE', 'IDXX', 'IFF', 'ILMN', 'INCY', 'INFO', 'INTC', 'INTU', 'IP', 'IPG', 'IPGP', 
-                'IQV', 'IR', 'IRM', 'ISRG', 'IT', 'ITW', 'IVZ', 'JBHT', 'JCI', 'JEC', 'JEF', 'JKHY', 'JNJ', 'JNPR', 'JPM', 'JWN', 
-                'K', 'KEY', 'KEYS', 'KHC', 'KIM', 'KLAC', 'KMB', 'KMI', 'KMX', 'KO', 'KR', 'KSS', 'KSU', 'L', 'LB', 'LEG', 'LEN', 'LH',
-                'LIN', 'LKQ', 'LLL', 'LLY', 'LMT', 'LNC', 'LNT', 'LOW', 'LRCX', 'LUV', 'LW', 'LYB', 'M', 'MA', 'MAA', 'MAC', 'MAR', 
-                'MAS', 'MAT', 'MCD', 'MCHP', 'MCK', 'MCO', 'MDLZ', 'MDT', 'MET', 'MGM', 'MHK', 'MKC', 'MLM', 'MMC', 'MMM', 'MNST', 
-                'MO', 'MOS', 'MPC', 'MRK', 'MRO', 'MS', 'MSCI', 'MSFT', 'MSI', 'MTB', 'MTD', 'MU', 'MXIM', 'MYL', 'NBL', 
-                'NCLH', 'NDAQ', 'NEE', 'NEM', 'NFLX', 'NFX', 'NI', 'NKE', 'NKTR', 'NLSN', 'NOC', 'NOV', 'NRG', 'NSC', 
-                'NTAP', 'NTRS', 'NUE', 'NVDA', 'NWL', 'NWS', 'NWSA', 'O', 'OKE', 'OMC', 'ORCL', 'ORLY', 'OXY',
-                'PAYX', 'PBCT', 'PCAR', 'PEG', 'PEP', 'PFE', 'PFG', 'PG', 'PGR', 'PH', 'PHM', 'PKG', 'PKI',
-                'PLD', 'PM', 'PNC', 'PNR', 'PNW', 'PPG', 'PPL', 'PRGO', 'PRU', 'PSA', 'PSX', 'PVH', 'PWR', 'PXD', 
-                'PYPL', 'QCOM', 'QRVO', 'RCL', 'RE', 'REG', 'REGN', 'RF', 'RHI', 'RHT', 'RJF', 'RL', 'RMD', 
-                'ROK', 'ROL', 'ROP', 'ROST', 'RSG', 'RTN', 'SBAC', 'SBUX', 'SCHW', 'SEE', 'SHW', 'SIVB', 'SJM', 'SLB', 
-                'SLG', 'SNA', 'SNPS', 'SO', 'SPG', 'SPGI', 'SRE', 'STI', 'STT', 'STX', 'STZ', 'SWK', 'SWKS', 'SYF', 'SYK', 'SYMC',
-                'SYY', 'T', 'TAP', 'TDG', 'TEL', 'TFX', 'TGT', 'TIF', 'TJX', 'TMK', 'TMO', 'TPR', 'TRIP', 'TROW', 
-                'TRV', 'TSCO', 'TSN', 'TSS', 'TTWO', 'TWTR', 'TXN', 'TXT', 'UA', 'UAA', 'UAL', 'UDR', 'UHS', 'ULTA', 'UNH', 'UNM', 'UNP', 
-                'UPS', 'URI', 'USB', 'UTX', 'V', 'VAR', 'VFC', 'VIAB', 'VLO', 'VMC', 'VNO', 'VRSK', 'VRSN', 'VRTX', 'VTR', 'VZ', 'WAT', 
-                'WBA', 'WCG', 'WDC', 'WEC', 'WELL', 'WFC', 'WHR', 'WLTW', 'WM', 'WMB', 'WMT', 'WRK', 'WU', 'WY', 'WYNN', 
-                'XEC', 'XEL', 'XLNX', 'XOM', 'XRAY', 'XRX', 'XYL', 'YUM', 'ZBH', 'ZION', 'ZTS']
+
+
+
+df = pd.read_csv('mpg.csv')
+df2 = pd.read_csv('2010YumaAZ.csv')
+df3 = pd.read_csv('2010SitkaAK.csv')
+features = df.columns
+
+stocks = pd.read_csv('Symbol.csv')
 
 stock_picker = []
 
@@ -80,11 +44,26 @@ today_year = time[0:4]
 today_day = time[5:7]
 today_month = time[8:10] 
 
-for Symbol in stocks:
+for Symbol in stocks['Symbol']:
     stock_picker.append({'label':str(Symbol), 'value': Symbol})
 
 
 app.layout = html.Div([
+             
+             html.H1('Python Driven BI Chart Samples',
+                     style = {'font-family': 'Calibri',
+                             'text-align': 'center',
+                              'text-transform': 'uppercase'
+                              }),
+            html.H5('Comming Soon: Financial Statment Comparison Web App',
+                    style = {'text-align': 'center',
+                             'font-family': 'Calibri'}),
+            html.H6('Nathaniel Gibson',
+                    style = {'text-align': 'center',
+                             'font-family': 'Calibri'
+                              }),
+             
+             
              dcc.Dropdown(id='stock_symbol', 
                           options= stock_picker,
                           multi = True,
@@ -112,7 +91,55 @@ app.layout = html.Div([
                                 'font-size': '16px',
                                 'border-radius': '12px'}
                             ),
-             dcc.Graph(id='graph', figure ='children')
+             dcc.Graph(id='graph', figure ='children'),
+             
+             html.Div([
+                 html.Div([
+                         html.Div('X-Axis'),
+                     dcc.Dropdown(id='xaxis',
+                                  options=[{'label':i,'value':i} for i in features],
+                                  value = 'mpg',)
+                     ], style={'width':'20%', 'display':'inline-block'}),
+                 html.Div([
+                         html.Div('Y-Axis'),
+                     dcc.Dropdown(id='yaxis',
+                                  options=[{'label': i, 'value':i} for i in features],
+                                  value = 'horsepower')
+                     ], style={'width':'20%', 'display':'inline-block'}),
+                 dcc.Graph(id='feature_graphic')
+             
+        
+        ], style={'padding': 20}),
+                     
+        html.Div([html.H3('Arizona vs Alaska Tempature Matrix',
+                     style = {'text-align': 'center',
+                              'font-family': 'Calibri',
+                              'text-transform': 'uppercase'
+                              }),
+                
+                dcc.Graph(id='heatmap1',
+                                 figure = {'data':[go.Heatmap(x=df3['DAY'],
+                                                              y=df3['LST_TIME'],
+                                                              z=df3['T_HR_AVG'].values.tolist(),
+                                                              colorscale = 'Jet', 
+                                                              zmin=5,
+                                                              zmax=40)],
+                                  'layout':go.Layout(title='(Sitka, Alaska) °C',
+                                                     yaxis = dict(title = 'Time'),
+                                                     xaxis = {'title': 'Day of the Week'},)
+                                  }),
+                       
+                        dcc.Graph(id='heatmap2',
+                                 figure = {'data':[go.Heatmap(x=df2['DAY'],
+                                                              y=df2['LST_TIME'],
+                                                              z=df2['T_HR_AVG'].values.tolist(),
+                                                              colorscale = 'Jet', 
+                                                              zmin=5,
+                                                              zmax=40)],
+                                  'layout':go.Layout(title='(Yuma,Arizona) °C',
+                                                     yaxis = dict(title = 'Time'),
+                                                     xaxis = {'title': 'Day of the Week'})})
+])
              
                           
         ])
@@ -145,25 +172,28 @@ def update_figure(n_clicks, selected_ticker, start_date, end_date):
     
         
     return {'data': trace1, 
-                'layout':go.Layout(title ='S&P 500 Stock Trends',
+                'layout':go.Layout(title ='S&P 500 Closing Prices (Daily)',
                                    xaxis={'title':'Date'},
                                   yaxis=dict(title='Price'))}
-      
-    
+            
+                     
+@app.callback(Output('feature_graphic', 'figure'),
+              [Input('xaxis','value'),
+               Input ('yaxis','value')]) 
 
+                   
+def update_graph(xaxis_name, yaxis_name):
+    return{'data':[go.Scatter(x=df[xaxis_name], 
+                              y=df[yaxis_name],
+                              text=df['name'],
+                              mode = 'markers',
+                              marker={'size':15,
+                                      'opacity':0.5,
+                                      'line':{'width':0.5,'color':'white'}})],
+            'layout':go.Layout(title = 'Car Relational Attribute Chart',
+                               xaxis=dict(title = xaxis_name ),
+                               yaxis=dict(title = yaxis_name ),
+                               hovermode='closest')}
+            
 if __name__=='__main__':
     app.run_server()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
