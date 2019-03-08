@@ -19,12 +19,11 @@
     from datetime import datetime as dt
     import dash_auth
 
-    USERNAME_PASSWORD_PAIRS = [['username','password']]
+ 
 
 
 
     app= dash.Dash()
-    auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
     server = app.server
 
 
