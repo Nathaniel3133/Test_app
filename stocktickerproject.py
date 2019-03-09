@@ -34,8 +34,8 @@ df2 = pd.read_csv('2010YumaAZ.csv')
 df3 = pd.read_csv('2010SitkaAK.csv')
 features = df.columns
 
-stocks = pd.read_csv('Symbol.csv')
-
+stocks = pd.read_csv('Symbol_Name.csv')
+stock_list = stocks[['Symbol','Security']]
 stock_picker = []
 
 time = (str(dt.now()))
@@ -43,8 +43,10 @@ today_year = time[0:4]
 today_day = time[5:7]
 today_month = time[8:10] 
 
-for Symbol in stocks['Symbol']:
-    stock_picker.append({'label':str(Symbol), 'value': Symbol})
+for Symbol, Security in stock_list.itertuples(index=False):
+    stock_picker.append({'label':(Security), 'value': Symbol})
+    
+
 
 
 app.layout = html.Div([
