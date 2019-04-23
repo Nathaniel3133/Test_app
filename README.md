@@ -55,7 +55,7 @@
                              'text-align': 'center',
                               'text-transform': 'uppercase'
                               }),
-            html.H5('Comming Soon: Financial Statment Comparison Web Ap',
+            html.H5('Comming Soon: Financial Statment Comparison Web App',
                     style = {'text-align': 'center',
                              'font-family': 'Calibri'}),
             html.H6('Nathaniel Gibson',
